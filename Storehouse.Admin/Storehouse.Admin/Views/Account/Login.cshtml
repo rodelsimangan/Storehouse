@@ -1,0 +1,52 @@
+﻿@model StorehouseAdmin.Models.LoginViewModel
+
+@{
+    ViewBag.Title = "Log in";
+}
+<div class="row">
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    <i class="glyphicon glyphicon-wrench pull-right"></i>
+                    <h4>@ViewBag.Title</h4>
+                </div>
+            </div>
+            <div class="panel-body">
+                @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form form-vertical", role = "form" }))
+                {
+
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true)
+                    <div class="control-group">
+                        @Html.LabelFor(m => m.UserName)
+                        <div class="controls">
+                            @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", placeholder = "Enter UserName" })
+                            @Html.ValidationMessageFor(m => m.UserName)
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        @Html.LabelFor(m => m.Password)
+                        <div class="controls">
+                            @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Enter Password" })
+                            @Html.ValidationMessageFor(m => m.Password)
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <div class="controls">
+                            @Html.CheckBoxFor(m => m.RememberMe)
+                            @Html.LabelFor(m => m.RememberMe)
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label></label>
+                        <div class="controls">
+                            <input type="submit" value="Log in" class="btn btn-primary" />
+                        </div>
+                    </div>
+                }
+
+            </div><!--/panel content-->
+        </div>
+    </div>
+</div>

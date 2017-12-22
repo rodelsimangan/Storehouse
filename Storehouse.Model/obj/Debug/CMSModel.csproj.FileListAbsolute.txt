@@ -1,0 +1,6 @@
+C:\Users\RS004342191\source\repos\Storehouse\CMSModel\bin\Debug\CMSModel.dll
+C:\Users\RS004342191\source\repos\Storehouse\CMSModel\bin\Debug\CMSModel.pdb
+C:\Users\RS004342191\source\repos\Storehouse\CMSModel\obj\Debug\CMSModel.csprojResolveAssemblyReference.cache
+C:\Users\RS004342191\source\repos\Storehouse\CMSModel\obj\Debug\CMSModel.csproj.CoreCompileInputs.cache
+C:\Users\RS004342191\source\repos\Storehouse\CMSModel\obj\Debug\CMSModel.dll
+C:\Users\RS004342191\source\repos\Storehouse\CMSModel\obj\Debug\CMSModel.pdb

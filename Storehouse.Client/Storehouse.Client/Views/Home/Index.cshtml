@@ -1,0 +1,133 @@
+﻿@model dynamic
+
+<!-- Homepage Slider -->
+<div id="divContent" class="contentArea">
+    <div class="divPanel" style="padding-top:10px; padding-bottom:10px;">
+        <div class="row-fluid">
+            <div class="span1"></div>
+            <div class="span10">
+                <div class="camera_full_width">
+                    <div id="camera_wrap" style="width:100%; max-height:350px;margin-top:30px; margin-left:5px;">
+                        @{
+                            int ctr = 0;
+                            foreach (var slider in Model.Sliders)
+                            {
+                                <div data-src="@String.Concat(System.Configuration.ConfigurationManager.AppSettings["UploadsPath"], slider.SlideImage)" data-link="@slider.Url">
+                                    <div class="camera_caption fadeFromBottom @string.Concat("cap",ctr)">@slider.Subtitle</div>
+                                </div>
+                                ctr++;
+                            }
+                        }
+                    </div>
+                    <br style="clear:both" /><div style="margin-bottom:0px"></div>
+                </div>
+            </div>
+            <div class="span1"></div>
+        </div>
+    </div>
+    <div class="divPanel notop page-content">
+        <div class="row-fluid">
+            <!--Edit Main Content Area here-->
+            <div class="span1"></div>
+            <div class="span10">
+                <div class="row-fluid" style="margin-left:5px;margin-right:0px;">
+                    <table class="table borderless">
+                        <tr style="border-top:none;">
+                            <td style="width: 307.36px; padding-left:0px;padding-top:0px;">
+                                <div class="camera_full_width">
+                                    <div id="carousel-example-generic" class="carousel slide pull-right" data-ride="carousel">
+                                        <div class="carousel-inner" role="listbox">
+                                            @{int counter = 0;}
+                                            @foreach (var slider in ViewBag.ContentSliders)
+                                            {
+                                                if (slider.LeftRight == "Left Slider")
+                                                {
+                                                    if (counter == 0)
+                                                    {
+                                                        <div class="item active pull-right">
+                                                            <a href="@slider.Url"><img src="@String.Concat(System.Configuration.ConfigurationManager.AppSettings["UploadsPath"],slider.SlideImage)" style="width: 100%; max-height: 200px; max-width: 300px; "></a>
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="item pull-right">
+                                                            <a href="@slider.Url"><img src="@String.Concat(System.Configuration.ConfigurationManager.AppSettings["UploadsPath"],slider.SlideImage)" style="width: 100%; max-height: 200px; max-width: 300px; "></a>
+                                                        </div>
+                                                    }
+                                                    counter++;
+                                                }
+                                            }
+                                        </div>
+                                        <a class="animated left carousel-control-l" href="#carousel-example-generic" role="button" data-slide="prev">
+                                            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                                        </a>
+                                        <a class="animated right carousel-control-r" href="#carousel-example-generic" role="button" data-slide="next">
+                                            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="width: 307.36px; padding-left:0px;padding-top:0px;">
+                                <div class="camera_full_width">
+                                    <div id="carousel-example-generic2" class="carousel slide" data-ride="carousel">
+                                        <div class="carousel-inner" role="listbox">
+                                            @{int counter2 = 0;}
+                                            @foreach (var slider in ViewBag.ContentSliders)
+                                            {
+                                                if (slider.LeftRight == "Right Slider")
+                                                {
+                                                    if (counter2 == 0)
+                                                    {
+                                                        <div class="item active">
+                                                            <a href="@slider.Url"><img src="@String.Concat(System.Configuration.ConfigurationManager.AppSettings["UploadsPath"],slider.SlideImage)" style="width: 100%; max-height: 200px; max-width: 300px; "></a>
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="item">
+                                                            <a href="@slider.Url"><img src="@String.Concat(System.Configuration.ConfigurationManager.AppSettings["UploadsPath"],slider.SlideImage)" style="width: 100%; max-height: 200px; max-width: 300px; "></a>
+                                                        </div>
+                                                    }
+                                                    counter2++;
+                                                }
+                                            }
+                                        </div>
+                                        <a class="animated left carousel-control-l" href="#carousel-example-generic2" role="button" data-slide="prev">
+                                            <span class="glyphicon glyphicon-chevron-left"></span>
+                                        </a>
+                                        <a class="animated right carousel-control-r" href="#carousel-example-generic2" role="button" data-slide="next">
+                                            <span class="glyphicon glyphicon-chevron-right" aria-hidden="false"></span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="width: 307.36px; padding-left:0px;padding-top:0px;padding-right:0px;">
+                                <div class="camera_full_width">
+                                    <div id="carousel-example-generic3" class="carousel slide" data-ride="carousel">
+                                        <div class="carousel-inner" role="listbox">
+                                            <div class="item active">
+                                                @foreach (var slider in ViewBag.ContentSliders)
+                                                {
+                                                    if (slider.LeftRight == "Static Image")
+                                                    {
+                                                        <a href="@slider.Url"><img src="@String.Concat(System.Configuration.ConfigurationManager.AppSettings["UploadsPath"],slider.SlideImage)" style="width: 100%; max-height: 200px; max-width: 300px; "></a>
+                                                    }
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="span1"></div>
+
+            <!--End Main Content-->
+        </div>
+
+        @*<div id="footerInnerSeparator"></div>*@
+    </div>
+
+</div>

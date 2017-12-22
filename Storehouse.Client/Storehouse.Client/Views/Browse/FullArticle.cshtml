@@ -1,0 +1,66 @@
+﻿@model dynamic
+
+<div class="container">
+    <div class="divPanel">
+        <!--Edit Main Content Area here-->
+        <div id="divMain">
+            <div class="row-fluid">
+                <div class="span1"></div>
+                <div class="span11">
+                    <div class="breadcrumb">
+                        <a href="@(Url.Action("Index","Home"))">Home</a> &nbsp;-&nbsp;
+                        @if (Model.Template.Type == "Parent")
+                        {
+                            <span><a href="@(Url.Action("Articles", "Browse", new { id = Model.Template.Id }))">@Model.Template.Name</a></span>
+                        }
+                        else if (Model.Template.Type == "Lists")
+                        {
+                            <span><a href="@(Url.Action("Lists", "Browse", new { id = Model.Template.Id }))">@Model.Template.Name</a></span>
+
+                        }
+                        else if (Model.Template.Type == "RobinsonsStores")
+                        {
+                            <span><a href="@(Url.Action("RobinsonsStores", "Browse", new { id = Model.Template.Id }))">@Model.Template.Name</a></span>
+                        }
+                        &nbsp;-&nbsp;<span><strong>@Model.Content.Name</strong></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row-fluid">
+                <div class="span1"></div>
+                <div class="span10" id="divCMSContent">
+                    <!--Edit Main Content Area here-->
+                    @if (Model.Template.Type == "RobinsonsStores")
+                    {
+                        <br />
+                        <div class="editor-label" style="padding-right:20px;">
+                            <p>@Html.Raw(System.Web.HttpUtility.HtmlDecode(Model.Content.Markup))</p>
+                            <br /><a class="btn btn-primary" href="@(Url.Action("RobinsonsStores", "Browse", new { id = Model.Template.Id }))">&laquo;Back </a>
+                        </div>
+                    }
+                    @if (Model.Template.ControllerName == "EventsAndPromos" || Model.Template.ControllerName == "Partners")
+                    {
+
+                        <br />
+                        <div class="editor-label" style="padding-right:20px;">
+                            <p>@Html.Raw(System.Web.HttpUtility.HtmlDecode(Model.Content.Markup))</p>
+                            <a class="btn btn-primary" href="@(Url.Action("Articles", "Browse", new { id = Model.Template.Id }))">&laquo;Back </a>
+                        </div>
+                    }
+                </div>
+                <div class="span1"></div>
+            </div>
+            <!--End Main Content-->
+        </div>
+        <!--div id="footerInnerSeparator"></div-->
+    </div>
+</div>
+
+<script>
+$("table").width("100%");
+
+var tableWidth = $("table").width();
+$("table tr").children().each(function( index ) {
+    $(this).width(Math.round(100 * $(this).width() / tableWidth)+"%");
+});
+</script>

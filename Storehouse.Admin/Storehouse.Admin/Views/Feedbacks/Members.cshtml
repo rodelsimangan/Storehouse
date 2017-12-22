@@ -1,0 +1,85 @@
+﻿@model IEnumerable<Storehouse.Model.Feedbacks>
+
+<div class="panel panel-default">
+
+    <div class="panel-heading">
+        <div class="panel-title">
+            <h4>&nbsp;Members/Non-Members Feedback</h4>
+        </div>
+    </div>
+
+    <div class="panel-body"> 
+
+        <div class="table-responsive">
+
+        <table class="table table-condensed">
+            <tr>
+                <th>IsMember</th> 
+                <th>Member Id</th>               
+                <th>From</th>
+                <th>Name</th>
+                <th>Contact Number</th>
+                <th>Subject</th>
+            </tr>
+                @foreach (var item in Model)
+                {
+                    if(item.IsRead == false)
+                        {
+                          <tr class="info">
+                            <td>
+                               @if(item.IsMember == true)
+                                {
+                                   <input id="cbismember" type="checkbox" checked="checked"/>
+                                }
+                            </td>
+                            <td align="left">
+                                @Html.DisplayFor(modelItem => item.MemberId)
+                            </td>
+                            <td align="left">
+                                @Html.ActionLink(item.From, "ViewEmailContent", new { id = item.Id })
+                            </td>
+                            <td align="left">
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td align="left">
+                                @Html.DisplayFor(modelItem => item.ContactNumber)
+                            </td>
+                            <td align="left">
+                                @Html.DisplayFor(modelItem => item.Subject)
+                            </td>
+                        </tr>
+                        }
+                        else
+                        {
+                          <tr>
+                              <td>
+                                  @if (item.IsMember == true)
+                                  {
+                                      <input id="cbismember" type="checkbox" checked="checked" />
+                                  }
+                              </td>
+                            <td align="left">
+                                @Html.DisplayFor(modelItem => item.MemberId)
+                            </td>
+                            <td align="left">
+                                @Html.ActionLink(item.From, "ViewEmailContent", new { id = item.Id })
+                            </td>
+                            <td align="left">
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td align="left">
+                                @Html.DisplayFor(modelItem => item.ContactNumber)
+                            </td>
+                            <td align="left">
+                                @Html.DisplayFor(modelItem => item.Subject)
+                            </td>
+                        </tr>
+                        }
+                }
+                       
+        </table>  
+            </div> 
+
+    </div>
+
+</div>

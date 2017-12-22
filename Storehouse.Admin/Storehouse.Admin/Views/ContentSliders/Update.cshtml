@@ -1,0 +1,74 @@
+﻿@model Storehouse.Model.ContentSliders
+
+
+@using (Html.BeginForm("Update", "ContentSliders", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="panel panel-default">
+        <div class="panel-heading"><div class="panel-title"><h4>Content Sliders</h4></div></div>
+
+        <div class="panel-body">
+            @Html.ValidationSummary(true)
+            
+            <label title="lblChooseSlider">Choose Slider</label>
+
+            <div class="control-group">
+                @Html.DropDownListFor(model => model.LeftRight, new SelectList(
+                  new List<Object>{
+                       new { value = "Left Slider" , text = "Left Slider"  },
+                       new { value = "Right Slider" , text = "Right Slider" },
+                       new { value = "Static Image" , text = "Static Image" },
+                    }, "value", "text", 1), new { @style = "width:180px; height:25px" })
+            </div>
+
+            <br />
+
+            <div class="control-group">
+                <div class="controls">
+                    <label title="lblImage">Slide Image</label>
+                    <img src="@Model.SlideImage" class="img-thumbnail" style="height:100px;width:100px;">
+                    <input type="file" name="contentslidersImage" id="contentslidersImage" accept='image/*' />
+                </div>
+            </div>
+            <br />
+            <div class="control-group">
+                @Html.LabelFor(model => model.Url)
+                <div class="controls">
+                    @Html.EditorFor(model => model.Url, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Url)
+                </div>
+            </div>
+
+            <br />
+            <div class="control-group">
+                <div class="controls">
+                    <a href="#saveChanges" data-toggle="modal" class="btn btn-default">Update</a>
+                    @Html.ActionLink("Index", "ContentSliders", new { id = ViewBag.Id })
+                </div>
+            </div>
+        </div>
+        @Html.HiddenFor(model => model.Id)
+        @Html.HiddenFor(model => model.SlideImage)
+        @*@Html.HiddenFor(model => model.SlideBackground)*@
+        @Html.HiddenFor(model => model.IsDeleted)
+        @Html.HiddenFor(model => model.Sequence)
+        <div class="modal" id="saveChanges">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to save changes in this slider?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="submit" value="Yes" class="btn btn-default" />
+                        <a href="#" data-dismiss="modal" class="btn">No</a>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dalog -->
+        </div><!-- /.modal -->
+    </div>
+}
+
+

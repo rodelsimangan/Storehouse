@@ -1,0 +1,33 @@
+﻿@model IEnumerable<Storehouse.Model.Feedbacks>
+
+<div class="panel panel-default">
+@foreach (var item in Model)
+{
+    
+        if(item.IsMember == true){
+            ViewBag.IsMember = "(Member)";
+        }
+        else{
+            ViewBag.IsMember = "(Non-Member)";
+        }
+    
+            <div class="panel-heading">
+                <div class="panel-title">
+                    <h4>Email Content View @ViewBag.IsMember</h4>
+                </div>
+            </div>
+
+            <div class="panel-body">
+
+                        <b>IsMember:</b> @Html.DisplayFor(modelItem => item.IsMember) <br />
+                        <b>MemberId:</b> @Html.DisplayFor(modelItem => item.MemberId) <br />
+                        <b>Subject:</b> @Html.DisplayFor(modelItem => item.Subject) <br />
+                        <b>From:</b> @Html.DisplayFor(modelItem => item.From) <br />
+                        <b>Name:</b> @Html.DisplayFor(modelItem => item.Name) <br />
+                        <b>Contact No.:</b> @Html.DisplayFor(modelItem => item.ContactNumber) <br />
+                        <b>Message:</b><br /> @Html.DisplayFor(modelItem => item.Message)
+      
+            </div>
+}
+</div>
+    

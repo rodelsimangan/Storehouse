@@ -1,0 +1,47 @@
+﻿@model dynamic
+
+
+<div class="container">
+    <div class="divPanel">
+        <!--Edit Main Content Area here-->
+        <div id="divMain">
+            <div class="row-fluid">
+                <div class="span1"></div>
+                <div class="span11">
+                    <div class="breadcrumb">
+                        <a href="@(Url.Action("Index","Home"))">Home</a> &nbsp;-&nbsp; <span><strong>@Model.Template.Name</strong></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row-fluid">
+                <div class="span1"></div>
+                <div class="span10" id="divCMSContent">
+                    <div class="row-fluid">
+                        <div class="accordion" id="accordion2" style="padding-right:20px;">
+
+                            @foreach (var item in Model.Contents)
+                            {
+                                <div class="accordion-group">
+                                    <div class="accordion-heading">
+                                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#@item.Id">
+                                            @item.Name
+                                        </a>
+                                    </div>
+                                    <div id="@item.Id" class="accordion-body collapse in">
+                                        <div class="accordion-inner">
+                                            @Html.Raw(HttpUtility.HtmlDecode(item.Markup))
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="span1"></div>
+            </div>
+            <!--End Main Content-->
+        </div>
+
+        <div id="footerInnerSeparator"></div>
+    </div>
+</div>

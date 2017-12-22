@@ -1,0 +1,101 @@
+﻿@model Storehouse.Model.Feedbacks
+<div class="container">
+    <div class="divPanel">
+        <!--Edit Main Content Area here-->
+        <div id="divMain">
+            <div class="row-fluid">
+                <div class="span1"></div>
+                <div class="span11">
+                    <div class="breadcrumb">
+                        <a href="index.html">Home</a> &nbsp;-&nbsp; <span><strong>Contact</strong></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row-fluid">
+                <div class="span1"></div>
+                <div class="span10" id="divCMSContent">
+                    <div class="row-fluid">
+                        <div class="alert" style="color: #333; margin-right:20px;">
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            <strong><i class="icon-info-sign"></i></strong>&nbsp;This website uses cookies. By continuing to browse the site you are agreeing to our use of cookies. Review our <a href="@(Url.Action("PrivacyPolicy", "Home"))" style="color:rgb(208, 88, 3);">Privacy Policy</a> for more details.
+                        </div>  
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span7">
+
+                            <h1>Contact Us</h1>
+                            <center><h3 style="color:#FF6633;">@ViewBag.Message</h3></center>
+                            <hr>
+                            <!--Start Contact form -->
+                            @using (Html.BeginForm("Contact", "Home", FormMethod.Post))
+                            {
+                                @Html.AntiForgeryToken()
+                                @Html.ValidationSummary(true)
+
+                                @Html.TextBoxFor(model => model.Name, new { @class = "input-block-level", placeholder = "Name", @required = "required" })
+                                @Html.ValidationMessageFor(model => model.Name)
+                                @Html.EditorFor(model => model.IsMember, new { @class = "form-control" })
+                                <b>I'm a Robinsons Rewards Card Holder</b>
+                                @Html.ValidationMessageFor(model => model.IsMember)
+                                <br /><br />
+                                @Html.TextBoxFor(model => model.MemberId, new { @class = "input-block-level", placeholder = "Rewards Card Number (For members only)", @maxlength = "16" })
+                                @Html.ValidationMessageFor(model => model.MemberId)
+
+                                @Html.TextBoxFor(model => model.From, new { @class = "input-block-level", placeholder = "Email", @required = "required" })
+                                @Html.ValidationMessageFor(model => model.From)
+
+                                @Html.TextAreaFor(model => model.Message, new { @class = "input-block-level", placeholder = "Comments", rows = "11" })
+                                @Html.ValidationMessageFor(model => model.Message)
+                                <br />
+
+                                <div class="actions">
+                                    <input type="submit" value="Send Your Message" name="submit" id="submitButton" class="btn btn-primary pull-right" title="Click here to submit your message!" />
+                                </div>
+                            }
+                            <!--End Contact form -->
+                        </div>
+
+                        <!--Edit Sidebar Content here-->
+                        <div class="span5 sidebar" style="padding-right:20px;">
+
+                            <div class="sidebox">
+                                <h3 class="sidebox-title">Contact Information</h3>
+                                <p>
+                                    <address>
+                                        <strong>@ViewData["CompanyName"]</strong><br /><br />
+                                        @ViewData["CompanyAddress"]<br /><br />
+                                        <abbr title="Phone">P:</abbr> @ViewData["CompanyPhone"]<br />
+                                    </address>
+                                    <address>
+                                        <strong>Email</strong><br />
+                                        <a href="mailto:@ViewData["CompanyEmail"]">@ViewData["CompanyEmail"]</a>
+                                    </address>
+                                </p>
+
+                                <!-- Start Side Categories
+                <h4 class="sidebox-title">Sidebar Categories</h4>
+                <ul>
+                    <li><a href="#">Quisque diam lorem sectetuer adipiscing</a></li>
+                    <li><a href="#">Interdum vitae, adipiscing dapibus ac</a></li>
+                    <li><a href="#">Scelerisque ipsum auctor vitae, pede</a></li>
+                    <li><a href="#">Donec eget iaculis lacinia non erat</a></li>
+                    <li><a href="#">Lacinia dictum elementum velit fermentum</a></li>
+                    <li><a href="#">Donec in velit vel ipsum auctor pulvinar</a></li>
+                </ul>
+                <!-- End Side Categories -->
+                            </div>
+
+
+
+                        </div>
+                        <!--/End Sidebar Content-->
+
+                    </div>
+                </div>
+                <div class="span1"></div>
+            </div>
+        </div>
+    </div>
+    <div id="footerInnerSeparator"></div>
+</div>
+</div>

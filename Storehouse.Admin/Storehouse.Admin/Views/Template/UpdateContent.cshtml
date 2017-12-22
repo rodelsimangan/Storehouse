@@ -1,0 +1,135 @@
+﻿@model Storehouse.Model.Contents
+
+
+@using (Html.BeginForm("UpdateContent", "Template", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="panel panel-default">
+        <div class="panel-heading"><div class="panel-title"><h4>@ViewBag.Title</h4></div></div>
+
+        <div class="panel-body">
+            @Html.ValidationSummary(true)
+            <div class="control-group">
+                @Html.LabelFor(model => model.Name)
+                <div class="controls">
+                    @Html.TextBoxFor(model => model.Name, new { @class = "form-control", @style = "width:50%" })
+                    @Html.ValidationMessageFor(model => model.Name)
+                </div>
+            </div>
+
+            <div class="control-group">
+                @Html.LabelFor(model => model.Description)
+                <div class="controls">
+                    @Html.TextBoxFor(model => model.Description, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Description)
+                    <br />
+                    @Html.EditorFor(model => model.IsParent, new { @class = "form-control" }) &nbsp; &nbsp;
+                    <b>Parent Content</b>  &nbsp; &nbsp; &nbsp; &nbsp; <br />
+                    @Html.ValidationMessageFor(model => model.IsParent)
+                    <br />
+                </div>
+            </div>
+
+            <div class="control-group">
+                <div class="controls">
+                    @if (ViewBag.Title == "Robinsons Stores")
+                    {
+                        <label title="lblImage">Tab icon</label>
+                        <br/>
+                        <img src="@Model.Image" class="img-thumbnail" style="height:100px;width:100px;">
+                        <input type="file" name="iconFile" id="iconFile" accept='image/*' />
+                        <br />
+                    }      
+                    <label title="lblImage">Logo</label>
+                    <br/>
+                    <img src="@Model.Image" class="img-thumbnail" style="height:100px;width:100px;">
+                    <input type="file" name="imageFile" id="imageFile" accept='image/*' />
+                </div>
+            </div>
+            <br />
+            <div class="control-group">
+                @Html.LabelFor(model => model.Markup)
+                <div class="controls">
+                    @Html.TextAreaFor(model => model.Markup, new { @class = "ckeditor", @readonly = "true" })
+                    @Html.ValidationMessageFor(model => model.Markup)
+                </div>
+            </div>
+
+
+            <div class="control-group">
+                <div class="controls">
+                    <br />
+                    @Html.EditorFor(model => model.PushToNewsFeed, new { @class = "form-control" }) &nbsp; &nbsp;
+                    <b>Push to RSS Feed</b>  &nbsp; &nbsp; &nbsp; &nbsp;
+                    @Html.ValidationMessageFor(model => model.PushToNewsFeed)
+                    @Html.EditorFor(model => model.IncludeInHomePage, new { @class = "form-control" }) &nbsp; &nbsp;
+                    <b>Include in Site Homepage</b>
+                    @Html.ValidationMessageFor(model => model.IncludeInHomePage)
+                </div>
+            </div>
+
+            <div class="control-group">
+                <div class="controls">
+                </div>
+            </div>
+            <br />
+            <div class="control-group">
+                <b>Meta Keyword</b>
+                <div class="controls">
+                    @Html.TextBoxFor(model => model.MetaKeyword, new { @class = "form-control ", @style = "width:50%" })
+                    @Html.ValidationMessageFor(model => model.MetaKeyword)
+                </div>
+            </div>
+
+            <div class="control-group">
+                <b>Meta Description</b>
+                <div class="controls">
+                    @Html.TextBoxFor(model => model.MetaDescription, new { @class = "form-control", @style = "width:50%" })
+                    @Html.ValidationMessageFor(model => model.MetaDescription)
+                </div>
+            </div>
+            <br />
+            <br />
+            <div class="control-group">
+                <div class="controls">
+                    @Html.TextBoxFor(model => model.TemplateId, new { @Value = ViewBag.Id, @type = "hidden" })
+                    <a href="#saveChanges" data-toggle="modal" class="btn btn-default">Update</a>
+                    @Html.ActionLink("Contents", "Template", new { id = ViewBag.Id })
+
+
+                </div>
+            </div>
+        </div>
+        @Html.HiddenFor(model => model.Id)
+        @Html.HiddenFor(model => model.TemplateId)
+        @Html.HiddenFor(model => model.CreatedById)
+        @Html.HiddenFor(model => model.DateCreated)
+        @Html.HiddenFor(model => model.Icon)
+        @Html.HiddenFor(model => model.Image)
+        @Html.HiddenFor(model => model.IsDeleted)
+        @Html.HiddenFor(model => model.IsPublished)
+        @Html.HiddenFor(model => model.PublishedDate)
+        @Html.HiddenFor(model => model.Sequence)
+        @Html.HiddenFor(model => model.IsParent)
+        @Html.HiddenFor(model => model.ParentId)
+
+        <div class="modal" id="saveChanges">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to save changes in this content?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="submit" value="Yes" class="btn btn-default" />
+                        <a href="#" data-dismiss="modal" class="btn">No</a>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dalog -->
+        </div><!-- /.modal -->
+    </div>
+}
+
+

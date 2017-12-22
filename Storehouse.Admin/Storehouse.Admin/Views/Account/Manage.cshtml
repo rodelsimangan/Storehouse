@@ -1,0 +1,29 @@
+﻿@using StorehouseAdmin.Models;
+@using Microsoft.AspNet.Identity;
+@{
+    ViewBag.Title = "Change Password";
+}
+
+<p class="text-success">@ViewBag.StatusMessage</p>
+<div class="row">
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    <i class="glyphicon glyphicon-wrench pull-right"></i>
+                    <h4>@ViewBag.Title</h4>
+                </div>
+            </div>
+
+            @if (ViewBag.HasLocalPassword)
+            {
+                @Html.Partial("_ChangePasswordPartial")
+            }
+            else
+            {
+                @Html.Partial("_SetPasswordPartial")
+            }
+
+        </div>
+    </div>
+</div>

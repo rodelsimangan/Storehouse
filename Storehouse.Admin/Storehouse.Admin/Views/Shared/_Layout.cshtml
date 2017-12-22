@@ -1,0 +1,174 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Storehouse Content Management</title>
+    <meta name="generator" content="Bootply" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+        <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link href="~/Content/styles.css" rel="stylesheet">
+    <script src="http://maps.googleapis.com/maps/api/js"></script>
+    <script src="~/ckeditor/ckeditor.js" type="text/javascript"></script>
+    <style>
+        .formGrayOut {
+            background: #ccc;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div id="top-nav" class="navbar navbar-inverse navbar-static-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#"><img src="~/img/storehouse-white.gif" style="width:40%;height40%;" /></a>
+            </div>
+            <div class="navbar-collapse collapse">
+                @Html.Partial("_LoginPartial")
+            </div>
+        </div><!-- /container -->
+    </div>
+    <!-- /Header -->
+    <!-- Main -->
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-3">
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <ul class="list-unstyled">
+                        @if (User.IsInRole("Tenant"))
+                        {
+                            <li class="nav-header">
+                                <a href="#" data-toggle="collapse" data-target="#userMenu">
+                                    <h5>Templates <i class="glyphicon glyphicon-chevron-down"></i></h5>
+                                </a>
+                                <ul class="list-unstyled collapse in" id="userMenu">
+                                    @foreach (var item in (IEnumerable<Storehouse.Model.Templates>)ViewData["TemplateList"])
+                                    {
+                                        <li class="active"> <a href="@(Url.Action("Contents", "Template", new { id = item.Id }))"><i class="glyphicon glyphicon-file"></i> @item.Name</a></li>
+                                    }
+                                </ul>
+                            </li>
+                            <li class="nav-header">
+                                <a href="#" data-toggle="collapse" data-target="#menu2">
+                                    <h5>Layouts <i class="glyphicon glyphicon-chevron-right"></i></h5>
+                                </a>
+                                <ul class="list-unstyled collapse" id="menu2">
+                                    <li><a href="@(Url.Action("Index", "ContentSliders"))"><i class="glyphicon glyphicon-list"></i> Content Sliders</a></li>
+                                    <li><a href="@(Url.Action("Index", "OtherSettings"))"><i class="glyphicon glyphicon-list"></i> Other Settings</a></li>
+                                    <li><a href="@(Url.Action("Index", "Sliders"))"><i class="glyphicon glyphicon-list"></i> Sliders</a></li>
+                                    <li><a href="@(Url.Action("Index", "SocialLinks"))"><i class="glyphicon glyphicon-list"></i> Social Links</a></li>
+                                    <li><a href="@(Url.Action("Index", "TermsofUse"))"><i class="glyphicon glyphicon-list"></i> Terms of Use</a></li>
+                                </ul>
+                            </li>
+                            <li class="nav-header">
+                                <a href="@(Url.Action("Members", "Feedbacks"))" data-target="#menu3">
+                                    <h5>Feedbacks <span class="badge badge-info">@ViewBag.CountNew1</span><i class="glyphicon glyphicon-chevron-right"></i></h5>
+                                </a>
+                                @*<ul class="list-unstyled collapse in" id="menu3">
+
+                                        @if (ViewBag.CountNew1 != 0)
+                                        {
+                                            <li class="active"><a href="@(Url.Action("Members", "Feedbacks"))"><i class="glyphicon glyphicon-comment"></i> Members/Non-Members <span class="badge badge-info">@ViewBag.CountNew1</span></a></li>
+                                        }
+                                        else
+                                        {
+                                            <li class="active"><a href="@(Url.Action("Members", "Feedbacks"))"><i class="glyphicon glyphicon-comment"></i> Members/Non-Members </a></li>
+                                        }
+
+                                        @if (ViewBag.CountNew2 != 0)
+                                        {
+                                             <li><a href="@(Url.Action("NonMembers", "Feedbacks"))"><i class="glyphicon glyphicon-comment"></i> Non-members <span class="badge badge-info">@ViewBag.CountNew2</span></a></li>
+                                        }
+                                        else
+                                        {
+                                            <li><a href="@(Url.Action("NonMembers", "Feedbacks"))"><i class="glyphicon glyphicon-comment"></i> Non-members </a></li>
+                                        }
+
+                                    </ul>*@
+                            </li>
+                        }
+                        else if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-header">
+                                <a href="#" data-toggle="collapse" data-target="#menu4">
+                                    <h5>User Management <i class="glyphicon glyphicon-chevron-right"></i></h5>
+                                </a>
+                                <ul class="list-unstyled collapse" id="menu4">
+                                    <li><a href="@(Url.Action("ManageUsers", "Account"))"><i class="glyphicon glyphicon-user"></i> Users</a></li>
+                                    <li><a href="@(Url.Action("ManageRole", "Account"))"><i class="glyphicon glyphicon-tag"></i> Role</a></li>
+                                    <li><a href="@(Url.Action("Index", "RSSFeed"))"><i class="glyphicon-chevron-right"></i> RSS Feed</a></li>
+                                </ul>
+                            </li>
+                        }
+                    </ul>
+                }
+            </div>
+            <div class="col-sm-9">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+    <!-- /Main -->
+
+    <footer class="text-center"><p>&copy; 2017 - Storehouse Content Management</p></footer>
+    <!-- script references -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/scripts.js"></script>
+    <script type="text/javascript">
+        var editor;
+
+        // The instanceReady event is fired, when an instance of CKEditor has finished
+        // its initialization.
+        CKEDITOR.on('instanceReady', function (ev) {
+            editor = ev.editor;
+        });
+
+        $(function () {
+            $("input[type!=checkbox]").prop("disabled", false);;
+            $(document).ready(function () {
+                $("#IsParent").click(function () {
+                    if ($(this).prop("checked") == true) {
+                        $("input[type=text]").prop("readonly", true);
+                        $("input[name=Name]").prop("readonly", false);
+                        $("input[name=Description]").prop("readonly", false);
+                        $("input[type=checkbox]").prop("disabled", true);
+                        $("input[type=file]").prop("disabled", false);
+                        $("input[name=IsParent]").prop("disabled", false);
+                        toggleReadOnly();
+                    }
+                    else if ($(this).prop("checked") == false) {
+                        $("input[type=text]").prop("readonly", true);
+                        $("input[name=Name]").prop("readonly", false);
+                        $("input[name=Description]").prop("readonly", false);
+                        $("input[type=checkbox]").prop("disabled", true);
+                        $("input[type=file]").prop("disabled", false);
+                        $("input[name=IsParent]").prop("disabled", false);
+                        toggleReadOnly(false);
+                    }
+
+                });
+            });
+        });
+
+        function toggleReadOnly(isReadOnly) {
+            // Change the read-only state of the editor.
+            // http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR.editor.html#setReadOnly
+            editor.setReadOnly(isReadOnly);
+        }
+
+    </script>
+
+    @RenderSection("scripts", required: false)
+
+</body>
+</html>

@@ -1,0 +1,64 @@
+﻿@model Storehouse.Model.SocialMediaLinks
+
+
+@using (Html.BeginForm("Update", "SocialLinks", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <div class="panel panel-default">
+        <div class="panel-heading"><div class="panel-title"><h4>@ViewBag.Title</h4></div></div>
+
+        <div class="panel-body">
+            @Html.ValidationSummary(true)
+            <div class="control-group">
+                Social Media:
+                <div class="controls">
+                    @Html.DropDownListFor(d => d.Name, (IEnumerable<SelectListItem>)ViewBag.SocialMedia, new { @class = "form-control", @style = "width:25%" })
+                    @Html.ValidationMessageFor(model => model.Name)
+                </div>
+            </div>
+
+            <div class="control-group">
+                Link:
+                <div class="controls">
+                    @Html.TextBoxFor(model => model.Value, new { @class = "form-control", @style = "width:50%" })
+                    @Html.ValidationMessageFor(model => model.Value)
+                </div>
+            </div>
+            <br />
+            <div class="control-group">
+                <div class="controls">
+                </div>
+            </div>
+            <br />
+            <div class="control-group">
+                <div class="controls">
+                    <a href="#saveChanges" data-toggle="modal" class="btn btn-default">Update</a>
+                    @Html.ActionLink("Social Medial Links", "Index", new { id = ViewBag.Id })
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(model => model.Id)
+    @Html.HiddenFor(model => model.Name)
+    @Html.HiddenFor(model => model.Value)
+    @Html.HiddenFor(model => model.IsDeleted)
+    <div class="modal" id="saveChanges">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to save changes in this social media link?</p>
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" value="Yes" class="btn btn-default" />
+                    <a href="#" data-dismiss="modal" class="btn">No</a>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dalog -->
+    </div><!-- /.modal -->
+
+}
+
+

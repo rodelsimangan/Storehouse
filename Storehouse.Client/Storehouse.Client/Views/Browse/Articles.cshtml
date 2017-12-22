@@ -1,0 +1,53 @@
+﻿@model dynamic
+
+
+<div class="container">
+    <div class="divPanel">
+        <!--Edit Main Content Area here-->
+        <div id="divMain">
+            <div class="row-fluid">
+                <div class="span1"></div>
+                <div class="span11">
+                    <div class="breadcrumb">
+                        <a href="@(Url.Action("Index","Home"))">Home</a> &nbsp;-&nbsp; <span><strong>@Model.Template.Name</strong></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row-fluid">
+                <div class="span1"></div>
+                <div class="span10" id="divCMSContent">
+                    @foreach (var item in Model.Contents)
+                    {
+                        <div class="row-fluid">
+                            <div></div>
+                            <div class="span5">
+                                @if (Model.Template.ControllerName == "Partners")
+                                {
+                                    <img src="@String.Concat(System.Configuration.ConfigurationManager.AppSettings["UploadsPath"], item.Image)" class="img-responsive" style="width:100%; max-width: 500px; max-height: 300px;" alt="">
+                                }
+                                else
+                                {
+                                    <img src="@String.Concat(System.Configuration.ConfigurationManager.AppSettings["UploadsPath"], item.Image)" class="img-responsive" style="margin: -5px 0px 15px; width:100%; max-width: 500px; max-height: 300px;" alt="">
+                                }
+                            </div>
+                            <div class="span6">
+                                <h6>@item.Description</h6>
+
+
+                                <a class="btn btn-primary" href="@(Url.Action("FullArticle", "Browse", new { id = item.Id }))" data-toggle="modal">Read More &raquo;</a><br />
+
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
+                                    <li style="margin-left:10px;" role="presentation"><div class="span9 editor-label"> @Html.Raw(System.Web.HttpUtility.HtmlDecode(item.Markup))</div></li>
+                                </ul>
+
+                            </div>
+                        </div>
+                    }                   
+                </div>
+                <div class="span1"></div>
+            </div>
+            <!--End Main Content-->
+        </div>
+        <!--div id="footerInnerSeparator"></div-->
+    </div>
+</div>

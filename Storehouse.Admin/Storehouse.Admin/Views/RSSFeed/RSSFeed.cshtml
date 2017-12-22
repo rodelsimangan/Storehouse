@@ -1,0 +1,34 @@
+﻿@model IEnumerable<Storehouse.Model.Contents>
+
+<div class="panel-default">
+
+    <div class="panel-heading">
+        <div class="panel-title">
+            <h4>RSS Feed</h4>
+        </div>
+    </div>
+
+    <div class="panel-body">
+        <div class="table-responsive">
+            <table class="table-condensed">
+                
+                @foreach(var item in Model)
+                {
+                    if(item.PushToNewsFeed == true)
+                    {
+                    <tr>                        
+                        <td align="left">
+                            @Html.DisplayFor(modelItem => item.Name) Feed File Name
+                        </td>
+                        <td align="left">
+                            <input id="Text1" style="width:350px" type="text" value="@Html.DisplayFor(modelItem => item.TempName)" />
+                        </td>
+                    </tr>
+                    }
+                }
+
+            </table>
+        </div>
+    </div>
+
+</div>

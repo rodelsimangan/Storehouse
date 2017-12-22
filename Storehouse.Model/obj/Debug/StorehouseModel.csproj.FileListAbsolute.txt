@@ -1,0 +1,5 @@
+C:\Users\RS004342191\source\repos\Storehouse\CMSModel\bin\Debug\StorehouseModel.dll
+C:\Users\RS004342191\source\repos\Storehouse\CMSModel\bin\Debug\StorehouseModel.pdb
+C:\Users\RS004342191\source\repos\Storehouse\CMSModel\obj\Debug\StorehouseModel.csproj.CoreCompileInputs.cache
+C:\Users\RS004342191\source\repos\Storehouse\CMSModel\obj\Debug\StorehouseModel.dll
+C:\Users\RS004342191\source\repos\Storehouse\CMSModel\obj\Debug\StorehouseModel.pdb

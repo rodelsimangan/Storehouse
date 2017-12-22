@@ -1,0 +1,188 @@
+﻿@model IEnumerable<Storehouse.Model.Contents>
+
+
+
+<div class="panel panel-default">
+    <div class="panel-heading"><div class="panel-title"><h4>@ViewBag.Title</h4></div></div>
+    <p>
+        &nbsp;&nbsp; @Html.ActionLink("Add Content", "NewContent", new { id = ViewBag.Id, isChild = false })
+    </p>
+
+    <div class="input-append">
+        @using (Html.BeginForm("Contents", "Template", new { id = ViewBag.Id }, FormMethod.Post))
+        {
+           <input class="span9" id="Keywords" name="Keywords" size="16" type="text" value="@ViewBag.Keywords" style="margin-left:10px"><button class="btn" type="submit">Go!</button>
+        }
+    </div>
+
+    @foreach (var item in Model)
+    {
+        <div class="panel-body">
+            @if (item.ParentId != null)
+            {
+                <div class="col-xs-1 text-left">
+                    &nbsp;
+                </div>
+            }
+            else
+            {
+                <hr />
+            }
+            <div class="col-xs-2 text-right">
+                <img src="@item.Image" class="img-thumbnail" style="height:100px;width:100px;">
+            </div>
+            <div class="col-xs-4 text-left">
+                <b>Title:</b> @item.Name<br />
+                <b>Description:</b> @item.Description<br /><br />
+                <a href="@(Url.Action("UpdateContent", "Template", new { id = item.Id }))">Update</a>&nbsp;&nbsp;
+                <a href="#@string.Concat("deletemodal", item.Id)" data-toggle="modal">Delete</a><br />
+                @if (item.IsParent)
+                {
+                    <a href="@(Url.Action("NewContent","Template", new { id = item.Id, isChild = true }))">Add Child Content</a>
+                }
+                &nbsp; &nbsp;
+
+            </div>
+            <div class="col-xs-3 text-left">
+                @if (!item.IsParent)
+                {
+                    <!--<b>Add Social Link:</b><a href="#addSocialLinks" data-toggle="modal">
+                        @if (item.AddSocialLinks == true)
+                        {
+                            <span>Yes</span>
+                        }
+                        else
+                        {
+                            <span>No</span>
+                        }
+                    </a>
+                    <br />-->
+                    <b>Push to RSS Feed:</b><a href="#@item.Id" data-toggle="modal">
+                        @if (item.PushToNewsFeed == true)
+                        {
+                            <span>Yes</span>
+                        }
+                        else
+                        {
+                            <span>No</span>
+                        }
+                    </a><br />
+                    <b>Published:</b>
+                    if (item.IsPublished == true)
+                    {
+                        <span>@string.Format("{0:MM/dd/yyyy}", item.PublishedDate)</span>
+                    }
+                    else
+                    {
+                        <a href="#@string.Concat("publishcontent", item.Id)" data-toggle="modal"><span>No</span></a>
+                    }
+                    <br />
+                    <b>Include in Site Homepage:</b><a href="#@string.Concat("includeinhomepage", item.Id)" data-toggle="modal">
+                        @if (item.IncludeInHomePage == true)
+                        {
+                            <span>Yes</span>
+                        }
+                        else
+                        {
+                            <span>No</span>
+                        }
+                    </a><br />
+                }
+            </div>
+            <div class="col-xs-1 text-right">
+                @if (!item.IsParent)
+                {
+                    <a href="@(Url.Action("MoveUp", "Template", new { id = item.Id  }))"><span class="glyphicon glyphicon-arrow-up"></span></a>
+                    <a href="@(Url.Action("MoveDown", "Template", new { id = item.Id  }))"><span class="glyphicon glyphicon-arrow-down"></span></a>
+                }
+            </div>
+
+            <!--div class="modal" id="addSocialLinks">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Add Social Links?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <a href="@(Url.Action("AddSocialLinks", "Template", new { id = item.Id , ans = "yes"  }))" class="btn btn-primary">Yes</a>
+                            <a href="@(Url.Action("AddSocialLinks", "Template", new { id = item.Id , ans = "no" }))" class="btn btn-primary">No</a>
+                        </div>
+                    </div>-->
+            <!-- /.modal-content -->
+            <!--</div><!-- /.modal-dalog -->
+            <!--</div><!-- /.modal -->
+
+            <div class="modal" id="@item.Id">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Push to RSS Feed?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <a href="@(Url.Action("PushToRssFeed", "Template", new { id = item.Id, ans = "yes" }))" class="btn btn-primary">Yes</a>
+                            <a href="@(Url.Action("PushToRssFeed", "Template", new { id = item.Id, ans = "no" }))" class="btn btn-primary">No</a>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dalog -->
+            </div><!-- /.modal -->
+
+            <div class="modal" id="@string.Concat("publishcontent", item.Id)">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Publish this content?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <a href="@(Url.Action("PublishContent", "Template", new { id = item.Id}))" class="btn btn-primary">Yes</a>
+                            <a href="#" data-dismiss="modal" class="btn">No</a>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dalog -->
+            </div><!-- /.modal -->
+
+            <div class="modal" id="@string.Concat("includeinhomepage", item.Id)">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Include in Site Hompage?</p>
+                        </div>
+                        <div class="modal-footer">
+                            @*<a href="@(Url.Action("UpdateContent", "Template", new { id = item.Id }))">Update</a>&nbsp;&nbsp;*@
+                            <a href="@(Url.Action("IncludeInHomepage", "Template", new { id = item.Id, ans = "yes" }))" class="btn btn-primary">Yes</a>
+                            <a href="@(Url.Action("IncludeInHomepage", "Template", new { id = item.Id, ans = "no" }))" class="btn btn-primary">No</a>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dalog -->
+            </div><!-- /.modal -->
+
+            <div class="modal" id="@string.Concat("deletemodal", item.Id)">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Are you sure you want to delete this content?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <a href="@(Url.Action("DeleteContent", "Template", new { id = item.Id }))" class="btn btn-primary">Yes</a>
+                            <a href="#" data-dismiss="modal" class="btn">No</a>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dalog -->
+            </div><!-- /.modal -->
+        </div>
+    }
+</div>

@@ -1,0 +1,48 @@
+﻿@model IEnumerable<dynamic>
+<!-- Page Title -->
+<div class="section section-breadcrumbs">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>Events And Promos</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="products-slider">
+                    @foreach (dynamic item in Model)
+                    {
+                           <!-- Event Slider Item -->
+                        <div class="shop-item">
+                            <!-- Event Image -->
+                            <div class="image">
+                                <a href="page-product-details.html">
+                                    <img src="@string.Concat(System.Configuration.ConfigurationManager.AppSettings["AdminPortal"], item.Image)" class="img-thumbnail" alt="@item.Name" />
+                                </a>
+                            </div>
+                            <!-- Event Title -->
+                            <div class="title">
+                                <h3><a href="page-product-details.html">@item.Name</a></h3>
+                            </div>
+                            <!-- Event Price -->
+                            <div class="price">
+                                @item.Description
+                            </div>
+                            <!-- Read More Button -->
+                            <div class="actions">
+                                <a href="#" class="btn btn-small"><i class="icon-shopping-cart icon-white"></i>Read More</a>
+                            </div>
+                        </div>
+
+                    <!-- End Event Slider Item -->
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

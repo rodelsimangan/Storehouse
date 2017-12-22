@@ -1,0 +1,78 @@
+﻿@{
+    string[] userNames = new string[1];
+    string[] roleNames = new string[1];
+    
+    using (var context = new StorehouseAdmin.Models.StorehouseDBContext())
+    {
+        // Populate your users and store it in the ViewBag (or other storage)
+        ViewBag.Users = context.Users.Select(u => u.UserName).ToList();
+        ViewBag.Role = context.Roles.Select(u => u.Name).ToList();
+    }
+  
+    ViewBag.Title = "Manage Role";
+}
+<div class="panel panel-default">
+    <div class="panel-heading"><div class="panel-title"><h4>@ViewBag.Title</h4></div></div>
+    <div class="panel-body">
+
+        @Html.ActionLink("Register New User", "Register")
+        @using (Html.BeginForm("ManageRole", "Account"))
+        {
+        <form method="post">
+
+            <fieldset>
+                <label for="selectUserName">Users:</label>
+                <select name="selectUserName">
+                  @foreach (var users in ViewBag.Users)
+                   {
+                         <option>@users</option>
+                   }
+                
+                </select>
+                &nbsp;
+                <label for="selectRoleName">Roles:</label>
+                <select name="selectRoleName">
+                    @foreach (var roles in ViewBag.Role)
+                    {
+                        <option>@roles</option>
+                    }
+                </select>
+                &nbsp;
+                <input type="submit" value="Add User to Role" name="action:buttonAddUserToRole" />
+                <input type="submit" value="Delete User from Role" name="action:buttonDeleteUserFromRole" />
+
+                @*@Html.ActionLink("Delete User from Role", "DeleteUserFromRole", new { username = "editor", rolename = "Contributor" })*@
+            </fieldset>
+
+
+            <h4>Roles</h4>
+            <ul>
+                @foreach (string roles in ViewBag.Role)
+                {
+                <li>@roles</li>
+                <ul>
+               @{using (var context = new StorehouseAdmin.Models.StorehouseDBContext())
+                 {
+
+                     var role = (from r in context.Roles where r.Name.Contains(roles) select r).FirstOrDefault();
+                     var users = context.Users.Where(x => x.Roles.Select(y => y.RoleId).Contains(role.Id)).ToList();
+                     var username = users.Select(u => u.UserName);
+
+                     foreach (string userrole in username)
+                   {
+                    <li>@userrole</li>
+                   }
+                     
+                 }
+               }
+            </ul>
+                }
+               
+
+            </ul>
+
+        </form>
+    
+}
+    </div>
+</div>

@@ -1,0 +1,31 @@
+﻿@model IEnumerable<dynamic>
+
+<!-- Page Title -->
+<div class="section section-breadcrumbs">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>Partners</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="section">
+    <div class="container">
+        @foreach (dynamic item in Model)
+        {
+            <div class="row service-wrapper-row">
+                <div class="col-sm-4">
+                    <div class="service-image">
+                        <img src="@string.Concat(System.Configuration.ConfigurationManager.AppSettings["AdminPortal"], item.Image)" class="img-thumbnail" alt="@item.Name">
+                    </div>
+                </div>
+                <div class="col-sm-8">
+                    <h3>@item.Name</h3>
+                    @Html.Raw(item.Markup)
+                </div>
+            </div>
+        }
+    </div>
+</div>

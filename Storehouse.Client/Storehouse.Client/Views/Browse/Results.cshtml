@@ -1,0 +1,70 @@
+﻿@model dynamic
+
+
+<div class="container">
+    <div class="divPanel">
+        <!--Edit Main Content Area here-->
+        <div id="divMain">
+            <div class="row-fluid">
+                <div class="span1"></div>
+                <div class="span11">
+                    <div class="breadcrumb">
+                        <a href="@(Url.Action("Index","Home"))">Home</a>
+                    </div>
+                </div>
+            </div>
+            <div class="row-fluid">
+                <div class="span1"></div>
+                <div class="span10" id="divCMSContent">
+                    <div class="row-fluid">
+                        <!--Edit Main Content Area here-->
+                        <div class="row-fluid">
+                            <div class="span4 pull-left">
+                                <div class="input-append">
+                                    @using (Html.BeginForm("Results", "Browse", FormMethod.Post))
+                                    {
+                                        <input class="span9" id="Keywords" name="Keywords" size="16" type="text" value="@ViewBag.Keywords"><button class="btn" type="submit">Go!</button>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row-fluid" style="padding-right:20px;">
+                            <h5 class="text-info">@ViewBag.Message</h5>
+                            @foreach (var item in Model.Contents)
+                            {
+                                string temptype = string.Empty;
+
+                                foreach (var item2 in (IEnumerable<Storehouse.Model.Templates>)ViewData["TemplateList"])
+                                {
+                                    if (item.TemplateId.ToString() == item2.Id.ToString())
+                                    {
+                                        temptype = item2.Type.ToString();
+                                    }
+                                }
+                                <div class="span5">
+                                    @if (temptype == "Parent")
+                                    {
+                                        <a href="@(Url.Action("Articles", "Browse", new { id = item.TemplateId }))">@item.Name </a>
+                                    }
+                                    else if (temptype == "Collapsables")
+                                    {
+                                        <a href="@(Url.Action("Collapsables", "Browse", new { id = item.TemplateId }))">@item.Name</a>
+                                    }
+                                    else if (temptype == "RobinsonsStores")
+                                    {
+                                        <a href="@(Url.Action("RobinsonsStores", "Browse", new { id = item.TemplateId }))">@item.Name</a>
+                                    }
+                                    <br /><span>@Html.Raw(item.Description)</span>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div id="footerInnerSeparator"></div>
+                </div>
+                <div class="span1"></div>
+            </div>
+            <!--End Main Content-->
+        </div>
+        <!--div id="footerInnerSeparator"></div-->
+    </div>
+</div>
