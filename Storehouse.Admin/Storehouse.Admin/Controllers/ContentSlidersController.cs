@@ -11,20 +11,27 @@ using Storehouse.Model;
 
 namespace StorehouseAdmin.Controllers
 {
-    [Authorize(Roles ="Tenant")]
+    [Authorize(Roles = "Tenant")]
     public class ContentSlidersController : BaseController
     {
 
         StorehouseDBContext db = new StorehouseDBContext();
+        string tenantId = string.Empty;
+
         //
         // GET: /ContentSliders/
         public ActionResult Index()
         {
+            if (TempData["TenantId"] != null)
+                tenantId = TempData["TenantId"].ToString();
+            //TempData.Keep();
+
             db = new StorehouseDBContext();
             var contentsliders = from s in db.ContentSliders
-                          where s.IsDeleted == false
-                          orderby s.Sequence
-                          select s;
+                                 where s.IsDeleted == false
+                                 && s.TenantId == tenantId
+                                 orderby s.Sequence
+                                 select s;
 
             if (contentsliders == null)
             {
@@ -49,9 +56,13 @@ namespace StorehouseAdmin.Controllers
                 db = new StorehouseDBContext();
                 int seqCtr = 0;
 
+                if (TempData["TenantId"] != null)
+                    tenantId = TempData["TenantId"].ToString();
+
                 var contentslidersList = (from s in db.ContentSliders
-                                  where s.IsDeleted == false
-                                  select s.Sequence).ToList();
+                                          where s.IsDeleted == false
+                                          && s.TenantId == tenantId
+                                          select s.Sequence).ToList();
                 if (contentslidersList.Count > 0)
                     seqCtr = contentslidersList.Max();
 
@@ -80,8 +91,8 @@ namespace StorehouseAdmin.Controllers
             db = new StorehouseDBContext();
 
             var contentsliders = (from s in db.ContentSliders
-                          where s.Id == new Guid(id)
-                          select s).First();
+                                  where s.Id == new Guid(id)
+                                  select s).FirstOrDefault();
 
             ViewBag.Title = "ContentSliders";
             return View(contentsliders);
@@ -115,8 +126,8 @@ namespace StorehouseAdmin.Controllers
             db = new StorehouseDBContext();
 
             var contentsliders = (from c in db.ContentSliders
-                          where c.Id == new Guid(id)
-                          select c).First();
+                                  where c.Id == new Guid(id)
+                                  select c).FirstOrDefault();
             contentsliders.IsDeleted = true;
             //slider.ModifiedById = User.Identity.GetUserId();
             //slider.DateModified = DateTime.Now;
@@ -131,14 +142,18 @@ namespace StorehouseAdmin.Controllers
         {
             db = new StorehouseDBContext();
 
+            if (TempData["TenantId"] != null)
+                tenantId = TempData["TenantId"].ToString();
+
             var contentsliders = (from c in db.ContentSliders
-                          where c.Id == new Guid(id)
-                          select c).First();
+                                  where c.Id == new Guid(id)
+                                  select c).FirstOrDefault();
             if (contentsliders.Sequence > 1)
             {
 
                 var higherSlider = (from h in db.ContentSliders
                                     where h.Sequence < contentsliders.Sequence && h.IsDeleted == false
+                                    && h.TenantId == tenantId
                                     orderby h.Sequence descending
                                     select h).First();
 
@@ -161,13 +176,17 @@ namespace StorehouseAdmin.Controllers
         {
             db = new StorehouseDBContext();
 
+            if (TempData["TenantId"] != null)
+                tenantId = TempData["TenantId"].ToString();
+
             var slidcontentsliderser = (from c in db.ContentSliders
-                          where c.Id == new Guid(id)
-                          select c).First();
+                                        where c.Id == new Guid(id)
+                                        select c).First();
             if (slidcontentsliderser.Sequence < db.ContentSliders.Count())
             {
                 var lowerSlider = (from l in db.Sliders
                                    where l.Sequence > slidcontentsliderser.Sequence && l.IsDeleted == false
+                                   && l.TenantId == tenantId
                                    orderby l.Sequence
                                    select l).First();
 
@@ -186,5 +205,5 @@ namespace StorehouseAdmin.Controllers
             }
             return RedirectToAction("Index", "ContentSliders");
         }
-	}
+    }
 }

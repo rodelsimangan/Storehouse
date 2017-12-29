@@ -14,11 +14,17 @@ namespace StorehouseAdmin.Controllers
     public class FeedbacksController : BaseController
     {
         StorehouseDBContext db = new StorehouseDBContext();
+        string tenantId = string.Empty;
+
         public ActionResult Members(string Filter_Value, int? Page_No)
         {
             db = new StorehouseDBContext();
+            if (TempData["TenantId"] != null)
+                tenantId = TempData["TenantId"].ToString();
+
             var feedback = from s in db.Feedbacks
                           where s.IsMember == true
+                          && s.TenantId == tenantId
                           orderby s.From
                           select s;
 
@@ -36,8 +42,13 @@ namespace StorehouseAdmin.Controllers
         public ActionResult NonMembers()
         {
             db = new StorehouseDBContext();
+
+            if (TempData["TenantId"] != null)
+                tenantId = TempData["TenantId"].ToString();
+
             var feedback = from s in db.Feedbacks
                            where s.IsMember == false
+                           && s.TenantId == tenantId
                            orderby s.From
                            select s;
 

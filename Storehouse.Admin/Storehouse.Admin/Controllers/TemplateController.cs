@@ -23,6 +23,7 @@ namespace StorehouseAdmin.Controllers
         //
         // GET: /Template/
         StorehouseDBContext db = new StorehouseDBContext();
+        string tenantId = string.Empty;
         string path = System.Configuration.ConfigurationManager.AppSettings["XMLPath"].ToString();
 
         public ActionResult Index()
@@ -33,8 +34,12 @@ namespace StorehouseAdmin.Controllers
         public ActionResult Contents(string id)
         {
             db = new StorehouseDBContext();
+            if (TempData["TenantId"] != null)
+                tenantId = TempData["TenantId"].ToString();
+
             var contents = from c in db.Contents
                            where c.TemplateId == id && c.IsDeleted == false && c.ParentId == null
+                           && c.TenantId  == tenantId
                            orderby c.PublishedDate descending
                            select c;
 
@@ -45,6 +50,7 @@ namespace StorehouseAdmin.Controllers
                 string parentId = content.Id.ToString();
                 var childcontents = from cc in db.Contents
                                     where cc.ParentId == parentId && cc.IsDeleted == false
+                                    && cc.TenantId == tenantId
                                     orderby cc.Id, cc.Sequence
                                     select cc;
                 foreach (Contents childcontent in childcontents.ToList())
@@ -76,8 +82,12 @@ namespace StorehouseAdmin.Controllers
             ViewBag.Keywords = Keywords;
 
             db = new StorehouseDBContext();
+            if (TempData["TenantId"] != null)
+                tenantId = TempData["TenantId"].ToString();
+
             var contents = from c in db.Contents
-                           where c.TemplateId == id && c.IsDeleted == false && c.ParentId == null && (c.Name.Contains(Keywords) || c.Description.Contains(Keywords) || c.Markup.Contains(Keywords))
+                           where c.TemplateId == id && c.IsDeleted == false && c.ParentId == null 
+                           && c.TenantId == tenantId && (c.Name.Contains(Keywords) || c.Description.Contains(Keywords) || c.Markup.Contains(Keywords))
                            orderby c.Id, c.Sequence descending
                            select c;
 
@@ -87,7 +97,8 @@ namespace StorehouseAdmin.Controllers
                 contentList.Add(content);
                 string parentId = content.Id.ToString();
                 var childcontents = from cc in db.Contents
-                                    where cc.ParentId == parentId && cc.IsDeleted == false && (cc.Name.Contains(Keywords) || cc.Description.Contains(Keywords) || cc.Markup.Contains(Keywords))
+                                    where cc.ParentId == parentId && cc.IsDeleted == false 
+                                   && cc.TenantId ==  tenantId  && (cc.Name.Contains(Keywords) || cc.Description.Contains(Keywords) || cc.Markup.Contains(Keywords))
                                     orderby cc.Id, cc.Sequence descending
                                     select cc;
                 foreach (Contents childcontent in childcontents.ToList())
@@ -144,11 +155,15 @@ namespace StorehouseAdmin.Controllers
             if (ModelState.IsValid)
             {
                 db = new StorehouseDBContext();
+                if (TempData["TenantId"] != null)
+                    tenantId = TempData["TenantId"].ToString();
+
                 int seqCtr = 0;
                 if (!content.IsParent)
                 {
                     var contentList = (from c in db.Contents
                                        where c.IsDeleted == false
+                                       && c.TenantId == tenantId
                                        select c.Sequence).ToList();
                     if (contentList.Count > 0)
                         seqCtr = contentList.Max();
@@ -243,7 +258,7 @@ namespace StorehouseAdmin.Controllers
             {
                 var parentcontent = (from p in db.Contents
                                      where p.Id == new Guid(content.ParentId)
-                                     select p).First();
+                                     select p).FirstOrDefault();
                 ViewBag.Title = string.Concat(template.FirstOrDefault().Text, " >> ", parentcontent.Name);
             }
             else
@@ -324,7 +339,7 @@ namespace StorehouseAdmin.Controllers
 
             var content = (from c in db.Contents
                            where c.Id == new Guid(id)
-                           select c).First();
+                           select c).FirstOrDefault();
             if (ans == "yes")
                 content.AddSocialLinks = true;
             else
@@ -344,7 +359,7 @@ namespace StorehouseAdmin.Controllers
 
             var content = (from c in db.Contents
                            where c.Id == new Guid(id)
-                           select c).First();
+                           select c).FirstOrDefault();
             if (ans == "yes")
                 content.PushToNewsFeed = true;
             else
@@ -364,7 +379,7 @@ namespace StorehouseAdmin.Controllers
 
             var content = (from c in db.Contents
                            where c.Id == new Guid(id)
-                           select c).First();
+                           select c).FirstOrDefault();
             content.IsPublished = true;
             content.PublishedDate = DateTime.Now;
             content.ModifiedById = User.Identity.GetUserId();
@@ -382,7 +397,7 @@ namespace StorehouseAdmin.Controllers
 
             var content = (from c in db.Contents
                            where c.Id == new Guid(id)
-                           select c).First();
+                           select c).FirstOrDefault();
             if (ans == "yes")
                 content.IncludeInHomePage = true;
             else
@@ -402,7 +417,7 @@ namespace StorehouseAdmin.Controllers
 
             var content = (from c in db.Contents
                            where c.Id == new Guid(id)
-                           select c).First();
+                           select c).FirstOrDefault();
             content.IsDeleted = true;
             content.ModifiedById = User.Identity.GetUserId();
             content.DateModified = DateTime.Now;
@@ -419,12 +434,13 @@ namespace StorehouseAdmin.Controllers
 
             var content = (from c in db.Contents
                            where c.Id == new Guid(id)
-                           select c).First();
+                           select c).FirstOrDefault();
             if (content.Sequence > 1)
             {
 
                 var higherContent = (from h in db.Contents
                                      where h.Sequence < content.Sequence && h.IsDeleted == false
+                                     && h.TenantId == tenantId
                                      orderby h.Sequence descending
                                      select h).First();
 
@@ -446,6 +462,8 @@ namespace StorehouseAdmin.Controllers
         public ActionResult MoveDown(string id)
         {
             db = new StorehouseDBContext();
+            if (TempData["TenantId"] != null)
+                tenantId = TempData["TenantId"].ToString();
 
             var content = (from c in db.Contents
                            where c.Id == new Guid(id)
@@ -454,6 +472,7 @@ namespace StorehouseAdmin.Controllers
             {
                 var lowerContent = (from l in db.Contents
                                     where l.Sequence > content.Sequence && l.IsDeleted == false
+                                    && l.TenantId == tenantId
                                     orderby l.Sequence
                                     select l).First();
 

@@ -15,12 +15,18 @@ namespace StorehouseAdmin.Controllers
     public class RSSFeedController : BaseController
     {
         StorehouseDBContext db = new StorehouseDBContext();
+        string tenantId = string.Empty;
+
         public ActionResult Index()
         {
             db = new StorehouseDBContext();
 
+            if (TempData["TenantId"] != null)
+                tenantId = TempData["TenantId"].ToString();
+
             var temp = from s in db.Templates
                           where s.Name != ""
+                          && s.TenantId == tenantId
                           select s;
 
             if (temp == null)
@@ -40,7 +46,7 @@ namespace StorehouseAdmin.Controllers
 
             var templates = (from s in db.Templates
                                   where s.Id == new Guid(id)
-                                  select s).First();
+                                  select s).FirstOrDefault();
 
             ViewBag.Title = "RSSFeed";
             return View(templates);

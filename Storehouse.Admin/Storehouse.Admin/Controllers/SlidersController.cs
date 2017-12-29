@@ -16,13 +16,19 @@ namespace StorehouseAdmin.Controllers
     public class SlidersController : BaseController
     {
         StorehouseDBContext db = new StorehouseDBContext();
+        string tenantId = string.Empty;
         //
         // GET: /PortalHomePage/
         public ActionResult Index()
         {
             db = new StorehouseDBContext();
+
+            if (TempData["TenantId"] != null)
+                tenantId = TempData["TenantId"].ToString();
+
             var sliders = from s in db.Sliders
                           where s.IsDeleted == false
+                          && s.TenantId == tenantId
                           orderby s.Sequence
                           select s;
 
@@ -48,9 +54,12 @@ namespace StorehouseAdmin.Controllers
             {
                 db = new StorehouseDBContext();
                 int seqCtr = 0;
+                if (TempData["TenantId"] != null)
+                    tenantId = TempData["TenantId"].ToString();
 
                 var sliderList = (from s in db.Sliders
                                   where s.IsDeleted == false
+                                  && s.TenantId == tenantId
                                   select s.Sequence).ToList();
                 if (sliderList.Count > 0)
                     seqCtr = sliderList.Max();
@@ -90,7 +99,7 @@ namespace StorehouseAdmin.Controllers
 
             var slider = (from s in db.Sliders
                            where s.Id == new Guid(id)
-                           select s).First();
+                           select s).FirstOrDefault();
 
             ViewBag.Title = "Sliders";
             return View(slider);
@@ -135,7 +144,7 @@ namespace StorehouseAdmin.Controllers
 
             var slider = (from c in db.Sliders
                            where c.Id == new Guid(id)
-                           select c).First();
+                           select c).FirstOrDefault();
             slider.IsDeleted = true;
             //slider.ModifiedById = User.Identity.GetUserId();
             //slider.DateModified = DateTime.Now;
@@ -150,14 +159,18 @@ namespace StorehouseAdmin.Controllers
         {
             db = new StorehouseDBContext();
 
+            if (TempData["TenantId"] != null)
+                tenantId = TempData["TenantId"].ToString();
+
             var slider = (from c in db.Sliders
                            where c.Id == new Guid(id)
-                           select c).First();
+                           select c).FirstOrDefault();
             if (slider.Sequence > 1)
             {
 
                 var higherSlider = (from h in db.Sliders
                                      where h.Sequence < slider.Sequence && h.IsDeleted == false
+                                     && h.TenantId == tenantId
                                      orderby h.Sequence descending
                                      select h).First();
 
@@ -179,6 +192,8 @@ namespace StorehouseAdmin.Controllers
         public ActionResult MoveDown(string id)
         {
             db = new StorehouseDBContext();
+            if (TempData["TenantId"] != null)
+                tenantId = TempData["TenantId"].ToString();
 
             var slider = (from c in db.Sliders
                            where c.Id == new Guid(id)
@@ -187,6 +202,7 @@ namespace StorehouseAdmin.Controllers
             {
                 var lowerSlider = (from l in db.Sliders
                                     where l.Sequence > slider.Sequence && l.IsDeleted == false
+                                    && l.TenantId == tenantId
                                     orderby l.Sequence
                                     select l).First();
 

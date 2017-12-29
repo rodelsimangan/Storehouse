@@ -15,13 +15,17 @@ namespace StorehouseAdmin.Controllers
     public class TermsofUseController : BaseController
     {
         StorehouseDBContext db = new StorehouseDBContext();
-        
+        string tenantId = string.Empty;
+
         public ActionResult Index()
         {
             db = new StorehouseDBContext();
+            if (TempData["TenantId"] != null)
+                tenantId = TempData["TenantId"].ToString();
 
             var termsofuse = (from t in db.TermsofUse
                               where t.Id != null
+                              && t.TenantId == tenantId
                               select t).First();
 
             termsofuse.Markup = HttpUtility.HtmlDecode(termsofuse.Markup);

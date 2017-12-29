@@ -13,7 +13,7 @@ using System.Reflection;
 
 namespace StorehouseAdmin.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     public class AccountController : BaseController
     {
         public AccountController()
@@ -50,6 +50,22 @@ namespace StorehouseAdmin.Controllers
                 if (user != null)
                 {
                     await SignInAsync(user, model.RememberMe);
+                    TempData["TenantId"] = user.Id;
+
+                    StorehouseDBContext db = new StorehouseDBContext();
+
+                    var templates = from t in db.Templates
+                                    where t.TenantId == user.Id
+                                    orderby t.Sequence
+                                    select t;
+                    TempData["TemplateList"] = templates.ToList().AsEnumerable();
+
+                    var feedback1 = from m in db.Feedbacks
+                                    where m.IsRead == false
+                                    && m.TenantId == user.Id
+                                    select m;
+
+                    TempData["CountNew1"] = feedback1.Count();
                     return RedirectToLocal(returnUrl);
                 }
                 else
@@ -71,9 +87,9 @@ namespace StorehouseAdmin.Controllers
         [AllowAnonymous]
         public ActionResult ManageUsers()
         {
-        
+
             return View();
-       
+
         }
         public ActionResult UpdateUser(string id)
         {
@@ -144,13 +160,13 @@ namespace StorehouseAdmin.Controllers
             //return View();
             return RedirectToAction("ManageRole", "Account");
         }
-     
-        
+
+
         // GET: /Account/Register
         [AllowAnonymous]
         public ActionResult Register()
         {
-         
+
             if (User.Identity.IsAuthenticated)
             {
                 return View();
@@ -227,48 +243,48 @@ namespace StorehouseAdmin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Manage(ManageUserViewModel model)
         {
-                bool hasPassword = HasPassword();
-                ViewBag.HasLocalPassword = hasPassword;
-                ViewBag.ReturnUrl = Url.Action("Manage");
-                if (hasPassword)
+            bool hasPassword = HasPassword();
+            ViewBag.HasLocalPassword = hasPassword;
+            ViewBag.ReturnUrl = Url.Action("Manage");
+            if (hasPassword)
+            {
+                if (ModelState.IsValid)
                 {
-                    if (ModelState.IsValid)
+                    IdentityResult result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword, model.NewPassword);
+                    if (result.Succeeded)
                     {
-                        IdentityResult result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword, model.NewPassword);
-                        if (result.Succeeded)
-                        {
-                            return RedirectToAction("Manage", new { Message = ManageMessageId.ChangePasswordSuccess });
-                        }
-                        else
-                        {
-                            AddErrors(result);
-                        }
+                        return RedirectToAction("Manage", new { Message = ManageMessageId.ChangePasswordSuccess });
+                    }
+                    else
+                    {
+                        AddErrors(result);
                     }
                 }
-                else
+            }
+            else
+            {
+                // User does not have a password so remove any validation errors caused by a missing OldPassword field
+                ModelState state = ModelState["OldPassword"];
+                if (state != null)
                 {
-                    // User does not have a password so remove any validation errors caused by a missing OldPassword field
-                    ModelState state = ModelState["OldPassword"];
-                    if (state != null)
-                    {
-                        state.Errors.Clear();
-                    }
+                    state.Errors.Clear();
+                }
 
-                    if (ModelState.IsValid)
+                if (ModelState.IsValid)
+                {
+                    IdentityResult result = await UserManager.AddPasswordAsync(User.Identity.GetUserId(), model.NewPassword);
+                    if (result.Succeeded)
                     {
-                        IdentityResult result = await UserManager.AddPasswordAsync(User.Identity.GetUserId(), model.NewPassword);
-                        if (result.Succeeded)
-                        {
-                            return RedirectToAction("Manage", new { Message = ManageMessageId.SetPasswordSuccess });
-                        }
-                        else
-                        {
-                            AddErrors(result);
-                        }
+                        return RedirectToAction("Manage", new { Message = ManageMessageId.SetPasswordSuccess });
+                    }
+                    else
+                    {
+                        AddErrors(result);
                     }
                 }
-        
-       // If we got this far, something failed, redisplay form
+            }
+
+            // If we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -381,7 +397,7 @@ namespace StorehouseAdmin.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
-            AuthenticationManager.SignOut();
+            AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
             return RedirectToAction("Index", "Home");
         }
 

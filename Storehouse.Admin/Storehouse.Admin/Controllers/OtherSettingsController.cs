@@ -17,10 +17,17 @@ namespace StorehouseAdmin.Controllers
         //
         // GET: /HomePageSetting/
         StorehouseDBContext db = new StorehouseDBContext();
+        string tenantId = string.Empty;
+
         public ActionResult Index()
         {
             db = new StorehouseDBContext();
+
+            if (TempData["TenantId"] != null)
+                tenantId = TempData["TenantId"].ToString();
+
             var homepagesettings = (from h in db.HomePageSettings
+                                    where h.TenantId == tenantId
                                     select h).FirstOrDefault();
 
             if (homepagesettings == null)

@@ -16,13 +16,18 @@ namespace StorehouseAdmin.Controllers
     public class SocialLinksController : BaseController
     {
         StorehouseDBContext db = new StorehouseDBContext();
-        //
+        string tenantId = string.Empty;
+
         // GET: /SocialLinks/
         public ActionResult Index()
         {
             db = new StorehouseDBContext();
-            var socialmedia = from s in db.SocialMediaLinks
+            if (TempData["TenantId"] != null)
+                tenantId = TempData["TenantId"].ToString();
+
+            var socialmedia = from s in db.SocialMediaLinks                              
                           where s.IsDeleted == false
+                          && s.TenantId == tenantId
                           select s;
 
             if (socialmedia == null)
@@ -61,7 +66,7 @@ namespace StorehouseAdmin.Controllers
 
             var socialmedia = (from s in db.SocialMediaLinks
                           where s.Id == new Guid(id)
-                          select s).First();
+                          select s).FirstOrDefault();
 
             ViewBag.Title = "Social Media Links";
             PopulateSocialMedia(socialmedia.Name);
@@ -88,7 +93,7 @@ namespace StorehouseAdmin.Controllers
 
             var socialmedia = (from c in db.SocialMediaLinks
                           where c.Id == new Guid(id)
-                          select c).First();
+                          select c).FirstOrDefault();
             socialmedia.IsDeleted = true;
             //slider.ModifiedById = User.Identity.GetUserId();
             //slider.DateModified = DateTime.Now;
@@ -103,8 +108,12 @@ namespace StorehouseAdmin.Controllers
 
         private void PopulateSocialMedia(object selectedSocialMedia = null)
         {
+            if (TempData["TenantId"] != null)
+                tenantId = TempData["TenantId"].ToString();
+
             var socialMediaList = from s in db.Lookups
                                   where s.Category == "SocialMedia" && s.IsDeleted == false
+                                  && s.TenantId == tenantId
                                   select s;
             ViewBag.SocialMedia = new SelectList(socialMediaList, "Name", "Name", selectedSocialMedia);
         }

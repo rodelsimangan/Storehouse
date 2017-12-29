@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using StorehouseAdmin.Models;
 
 namespace StorehouseAdmin.Controllers
@@ -11,18 +13,10 @@ namespace StorehouseAdmin.Controllers
     {
         public BaseController()
         {
-            
-            StorehouseDBContext db = new StorehouseDBContext();
-            var templates = from t in db.Templates
-                            orderby t.Sequence
-                            select t;
-            ViewData["TemplateList"] = templates.ToList().AsEnumerable();            
-
-            var feedback1 = from m in db.Feedbacks
-                                where m.IsRead == false
-                                select m;
-
-            ViewBag.CountNew1 = feedback1.Count();
+          /* if(TempData["TemplateList"]!=null)
+            {
+                TempData.Keep();
+            } */
         }
-	}
+    }
 }

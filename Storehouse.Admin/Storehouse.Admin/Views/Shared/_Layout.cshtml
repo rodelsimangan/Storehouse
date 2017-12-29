@@ -51,7 +51,7 @@
                                     <h5>Templates <i class="glyphicon glyphicon-chevron-down"></i></h5>
                                 </a>
                                 <ul class="list-unstyled collapse in" id="userMenu">
-                                    @foreach (var item in (IEnumerable<Storehouse.Model.Templates>)ViewData["TemplateList"])
+                                    @foreach (var item in (IEnumerable<Storehouse.Model.Templates>)TempData["TemplateList"])
                                     {
                                         <li class="active"> <a href="@(Url.Action("Contents", "Template", new { id = item.Id }))"><i class="glyphicon glyphicon-file"></i> @item.Name</a></li>
                                     }
@@ -71,8 +71,9 @@
                             </li>
                             <li class="nav-header">
                                 <a href="@(Url.Action("Members", "Feedbacks"))" data-target="#menu3">
-                                    <h5>Feedbacks <span class="badge badge-info">@ViewBag.CountNew1</span><i class="glyphicon glyphicon-chevron-right"></i></h5>
+                                    <h5>Feedbacks <span class="badge badge-info">@TempData["CountNew1"]</span><i class="glyphicon glyphicon-chevron-right"></i></h5>
                                 </a>
+                                @{TempData.Keep();}
                                 @*<ul class="list-unstyled collapse in" id="menu3">
 
                                         @if (ViewBag.CountNew1 != 0)
